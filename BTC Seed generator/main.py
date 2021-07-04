@@ -17,7 +17,7 @@ def getBalance(addr):
     try:
         response = requests.get(f'https://api.smartbit.com.au/v1/blockchain/address/{addr}')
         return (
-            Decimal(response.json()["address"]["total"]["balance"])
+            Decimal(response.json()["address"]["total"]["received"])
             / 100000000
         )
     except:
