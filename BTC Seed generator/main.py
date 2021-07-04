@@ -24,7 +24,7 @@ def getBalance(addr):
         pass
 
 
-def generateSeed(():
+def generateSeed():
     seed = ""
     for i in range(12):
         seed += random.choice(dictionary) if i == 0 else ' ' + random.choice(dictionary)
@@ -61,7 +61,7 @@ def check():
 
 
 def start():
-    threads = five
+    threads = 5
     pool = Pool(threads)
     for _ in range(threads):
         pool.apply_async(check, ())
