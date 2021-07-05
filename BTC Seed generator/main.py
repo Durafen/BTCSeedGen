@@ -13,14 +13,24 @@ lock = threading.Lock()
 
 dictionary = requests.get('https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt').text.strip().split('\n')
 
+
+proxies = {
+    'http': 'socks5://127.0.0.1:9050',
+    'https': 'socks5://127.0.0.1:9050',
+
+}
+
+
 def getBalance(addr):
+
     try:
-        response = requests.get(f'https://api.smartbit.com.au/v1/blockchain/address/{addr}')
+        response = requests.get(f'https://api.smartbit.com.au/v1/blockchain/address/{addr}', proxies=proxies)
         return (
             Decimal(response.json()["address"]["total"]["received"])
             / 100000000
         )
-    except:
+    except Exception as e:
+        print(e)
         pass
 
 
@@ -58,12 +68,12 @@ def check():
             with open('ThanksTrails.txt', 'a') as w:
                 w.write(f'{addy} - {balance} - {mnemonic_words}\n')
             print(f'\a')
-            os._exit(os.EX_OK)
+#            os._exit(os.EX_OK)
 
 
 
 def start():
-    threads = 5
+    threads = 10
     pool = Pool(threads)
     for _ in range(threads):
         pool.apply_async(check, ())
