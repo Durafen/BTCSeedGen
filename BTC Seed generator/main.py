@@ -71,7 +71,7 @@ def check():
             with open('ThanksTrails.txt', 'a') as w:
                 w.write(f'{addy} - {balance} - {mnemonic_words}\n')
             print(f'\a')
-#            os._exit(os.EX_OK)
+            os._exit(os.EX_OK)
 
 
 def start():
