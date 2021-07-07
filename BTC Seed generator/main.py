@@ -13,7 +13,6 @@ lock = threading.Lock()
 
 dictionary = requests.get('https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt').text.strip().split('\n')
 
-
 proxies = {
     'http': 'socks5://127.0.0.1:9050',
     'https': 'socks5://127.0.0.1:9050',
@@ -23,15 +22,19 @@ proxies = {
 
 def getBalance(addr):
 
-    try:
-        response = requests.get(f'https://api.smartbit.com.au/v1/blockchain/address/{addr}', proxies=proxies)
-        return (
-            Decimal(response.json()["address"]["total"]["received"])
-            / 100000000
-        )
-    except Exception as e:
-        print(e)
-        pass
+    got_balance = False
+
+    while not got_balance:
+        try:
+            response = requests.get(f'https://api.smartbit.com.au/v1/blockchain/address/{addr}', proxies=proxies)
+            got_balance = True
+            return (
+                Decimal(response.json()["address"]["total"]["received"])
+                / 100000000
+            )
+        except Exception as e:
+            print(e)
+
 
 
 def generateSeed():
@@ -71,7 +74,6 @@ def check():
 #            os._exit(os.EX_OK)
 
 
-
 def start():
     threads = 10
     pool = Pool(threads)
@@ -79,6 +81,7 @@ def start():
         pool.apply_async(check, ())
     pool.close()
     pool.join()
+
 
 if __name__ == '__main__':
     start()

@@ -2,6 +2,7 @@ import hashlib
 import secrets
 import binascii
 
+
 class Bip39Gen(object):
     def __init__(self, bip39wordlist):
         self.bip39wordlist = bip39wordlist
@@ -13,9 +14,6 @@ class Bip39Gen(object):
         entropy_hash = self.get_hash(entropy)
         indices = self.pick_words(entropy, entropy_hash, checksum_bit_count)
         self.print_words(indices)
-
-
-
 
 
     def generate_entropy(self, generated_bit_count):
