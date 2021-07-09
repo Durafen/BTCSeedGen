@@ -84,15 +84,13 @@ def check():
     while True:
         mnemonic_words = Bip39Gen(dictionary).mnemonic
         addy = bip39(mnemonic_words)
-        balance = getBalance1(addy)
+
         with lock:
-            print(f'{addy} - {balance} - {mnemonic_words}')
-        if balance > 0:
-#            with open('ThanksTrails.txt', 'a') as w:
-#                w.write(f'{addy} - {balance} - {mnemonic_words}\n')
-            printf(f'found!!!')
-            print(f'\a')
-            os._exit(os.EX_OK)
+            print(f'{addy} - {mnemonic_words}')
+            if addy in address_lines:
+                print(f'Found!!!')
+                print(f'\a')
+                os._exit(os.EX_OK)
 
 
 def start():
