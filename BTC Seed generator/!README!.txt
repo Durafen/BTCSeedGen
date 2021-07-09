@@ -1,3 +1,8 @@
+
+
+Excel to txt file:
+ cut -d, -f 1 btc_balance_sorted.csv > btc_base58.txt 
+
 Thanks for downloading the BTC Seed generator.
 
 You can either run the python version by:

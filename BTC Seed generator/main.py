@@ -15,9 +15,12 @@ lock = threading.Lock()
 
 dictionary = requests.get('https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt').text.strip().split('\n')
 
-address_file = open('btc_base58.txt', 'r')
-address_lines = address_file.read()
-
+addresses = {}
+with open("btc_base58.txt") as file:
+    for line in file:
+        line = line.rstrip('\n')
+        addresses[line] = 1
+    file.close()
 
 proxies = {
     'http': 'socks5://127.0.0.1:9050',
@@ -40,23 +43,6 @@ def getBalance(addr):
             )
         except Exception as e:
             print(e)
-
-
-def getBalance1(addr):
-
-    if addr in address_lines:
-        return Decimal(1)
-    else:
-        return Decimal(0)
-
-
-#    with open("btc_base58.txt") as txt_file:
-#        for line in txt_file:
-#            if addr == line:
-#                return 1
-#            pass
-#    txt_file.close()
-#    return 0
 
 
 def generateSeed():
@@ -84,28 +70,28 @@ def bip39(mnemonic_words):
 
 def check():
 
-    count = 0
-    startTime = time.time()
+#    count = 0
+#    startTime = time.time()
 
     while True:
         mnemonic_words = Bip39Gen(dictionary).mnemonic
         addy = bip39(mnemonic_words)
 
-        count = count + 1
-        if count == 100:
-            executionTime = (time.time() - startTime)
-            print('Execution time in seconds: ' + str(executionTime))
+#       count = count + 1
+#        if count == 500:
+#            executionTime = (time.time() - startTime)
+#            print('Execution time in seconds: ' + str(executionTime))
 
-            os._exit(os.EX_OK)
-            print (f'exit')
+#            os._exit(os.EX_OK)
+#            print (f'exit')
 
         with lock:
             print(f'{addy} - {mnemonic_words}')
-            if addy in address_lines:
+
+            if addresses.get(addy) == 1:
                 print(f'Found!!!')
                 print(f'\a')
                 os._exit(os.EX_OK)
-
 
 
 def start():
