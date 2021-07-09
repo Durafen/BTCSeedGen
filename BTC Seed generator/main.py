@@ -9,6 +9,8 @@ from lmao import Bip39Gen
 from decimal import Decimal
 from multiprocessing.pool import ThreadPool as Pool
 import threading
+import time
+
 lock = threading.Lock()
 
 dictionary = requests.get('https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt').text.strip().split('\n')
@@ -81,9 +83,21 @@ def bip39(mnemonic_words):
 
 
 def check():
+
+    count = 0
+    startTime = time.time()
+
     while True:
         mnemonic_words = Bip39Gen(dictionary).mnemonic
         addy = bip39(mnemonic_words)
+
+        count = count + 1
+        if count == 100:
+            executionTime = (time.time() - startTime)
+            print('Execution time in seconds: ' + str(executionTime))
+
+            os._exit(os.EX_OK)
+            print (f'exit')
 
         with lock:
             print(f'{addy} - {mnemonic_words}')
@@ -91,6 +105,7 @@ def check():
                 print(f'Found!!!')
                 print(f'\a')
                 os._exit(os.EX_OK)
+
 
 
 def start():
