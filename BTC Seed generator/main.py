@@ -13,6 +13,10 @@ lock = threading.Lock()
 
 dictionary = requests.get('https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt').text.strip().split('\n')
 
+address_file = open('btc_base58.txt', 'r')
+address_lines = address_file.read()
+
+
 proxies = {
     'http': 'socks5://127.0.0.1:9050',
     'https': 'socks5://127.0.0.1:9050',
@@ -35,6 +39,22 @@ def getBalance(addr):
         except Exception as e:
             print(e)
 
+
+def getBalance1(addr):
+
+    if addr in address_lines:
+        return Decimal(1)
+    else:
+        return Decimal(0)
+
+
+#    with open("btc_base58.txt") as txt_file:
+#        for line in txt_file:
+#            if addr == line:
+#                return 1
+#            pass
+#    txt_file.close()
+#    return 0
 
 
 def generateSeed():
@@ -64,18 +84,19 @@ def check():
     while True:
         mnemonic_words = Bip39Gen(dictionary).mnemonic
         addy = bip39(mnemonic_words)
-        balance = getBalance(addy)
+        balance = getBalance1(addy)
         with lock:
             print(f'{addy} - {balance} - {mnemonic_words}')
         if balance > 0:
-            with open('ThanksTrails.txt', 'a') as w:
-                w.write(f'{addy} - {balance} - {mnemonic_words}\n')
+#            with open('ThanksTrails.txt', 'a') as w:
+#                w.write(f'{addy} - {balance} - {mnemonic_words}\n')
+            printf(f'found!!!')
             print(f'\a')
             os._exit(os.EX_OK)
 
 
 def start():
-    threads = 10
+    threads = 1
     pool = Pool(threads)
     for _ in range(threads):
         pool.apply_async(check, ())
